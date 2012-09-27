@@ -325,7 +325,7 @@ def cpl(c, F, G = None, h = None, dims = None, A = None, b = None,
     helpers.sp_add_var("lmbda", lmbda)
     helpers.sp_add_var("lmbdasq", lmbdasq)
     
-    print "preloop c=\n", helpers.str2(c, "%.7f")
+    #print "preloop c=\n", helpers.str2(c, "%.7f")
     relaxed_iters = 0
     for iters in range(MAXITERS + 1):  
         helpers.sp_major_next()
@@ -628,6 +628,8 @@ def cpl(c, F, G = None, h = None, dims = None, A = None, b = None,
 
         if iters == 0:
             wz2nl, wz2l = matrix(0.0, (mnl,1)), matrix(0.0, (cdim, 1))
+            helpers.sp_add_var("wz2nl", wz2nl)
+            helpers.sp_add_var("wz2l", wz2l)
 
         def res(ux, uy, uz, us, vx, vy, vz, vs):
 
@@ -657,8 +659,10 @@ def cpl(c, F, G = None, h = None, dims = None, A = None, b = None,
 
             # vz := vz - W'*us - GG*ux 
             fDf(ux, wz2nl)
+            helpers.sp_create("15res", minor+10)
             blas.axpy(wz2nl, vz, alpha = -1.0)
             fG(ux, wz2l)
+            helpers.sp_create("20res", minor+10)
             blas.axpy(wz2l, vz, alpha = -1.0, offsety = mnl)
             blas.copy(us, ws3) 
             misc.scale(ws3, W, trans = 'T')
@@ -1376,12 +1380,20 @@ def cp(F, G = None, h = None, dims = None, A = None, b = None,
             if type(Df) in (matrix, spmatrix):
                 def Df_e(u, v, alpha = 1.0, beta = 0.0, trans = 'N'):  
                     if trans == 'N':
+                        #print "Df_e N: df=\n", helpers.str2(Df, "%.7f")
+                        #print "Df_e N: u=\n", helpers.str2(u[0], "%.7f")
+                        #print "Df_e N: v=\n", helpers.str2(v, "%.7f")
                         base.gemv(Df, u[0], v, alpha = alpha, beta = beta,
                             trans = 'N')
                         v[0] -= alpha * u[1]
+                        #print "Df_e N: v 1 =\n", helpers.str2(v, "%.7f")
                     else:
+                        #print "Df_e T: df=\n", helpers.str2(Df, "%.7f")
+                        #print "Df_e T: u=\n", helpers.str2(u, "%.7f")
+                        #print "Df_e T: v=\n", helpers.str2(v[0], "%.7f")
                         base.gemv(Df, u, v[0], alpha = alpha, beta = beta,
                             trans = 'T')
+                        #print "Df_e T: v 1 =\n", helpers.str2(v[0], "%.7f")
                         v[1] = -alpha * u[0] + beta * v[1]
             else:
                 def Df_e(u, v, alpha = 1.0, beta = 0.0, trans = 'N'):  
@@ -1635,10 +1647,13 @@ def gp(K, F, g, G=None, h=None, A=None, b=None):
         # y = F*x+g
         blas.copy(g, y)
         base.gemv(F, x, y, beta=1.0)
+        #print "y=\n", helpers.str2(y, "%.3f")
 
         if z is not None: H = matrix(0.0, (n,n))
 
         for i, start, stop in ind:
+
+            #print "start, stop = %d, %d" %(start, stop)
 
             # yi := exp(yi) = exp(Fi*x+gi) 
             ymax = max(y[start:stop])
@@ -1647,6 +1662,7 @@ def gp(K, F, g, G=None, h=None, A=None, b=None):
             # fi = log sum yi = log sum exp(Fi*x+gi)
             ysum = blas.asum(y, n=stop-start, offset=start)
             f[i] = ymax + math.log(ysum)
+            #print "ymax, ysum = %.3f, %.3f" %(ymax, ysum)
 
             # yi := yi / sum(yi) = exp(Fi*x+gi) / sum(exp(Fi*x+gi))
             blas.scal(1.0/ysum, y, n=stop-start, offset=start)
@@ -1665,17 +1681,24 @@ def gp(K, F, g, G=None, h=None, A=None, b=None):
                 #      = diag(yi)^1/2 * (Fi - 1*gradfi')
 
                 Fsc[:K[i], :] = F[start:stop, :] 
+                #print "Fsc [%d rows] =\n" % Fsc.size[0], helpers.str2(Fsc, "%.3f")
                 for k in range(start,stop):
                    blas.axpy(Df, Fsc, n=n, alpha=-1.0, incx=mnl+1,
                        incy=Fsc.size[0], offsetx=i, offsety=k-start)
                    blas.scal(math.sqrt(y[k]), Fsc, inc=Fsc.size[0],
                        offset=k-start)
 
+                #print "Fsc =\n", helpers.str2(Fsc, "%.3f")
                 # H += z[i]*Hi = z[i] * Fisc' * Fisc
                 blas.syrk(Fsc, H, trans='T', k=stop-start, alpha=z[i],
                     beta=1.0)
 
-        if z is None: return f, Df
-        else: return f, Df, H
+        if z is None:
+            #print "Df=\n", helpers.str2(Df, "%.3f")
+            return f, Df
+        else:
+            #print "Df=\n", helpers.str2(Df, "%.3f")
+            #print "H=\n", helpers.str2(H, "%.3f")
+            return f, Df, H
 
     return cp(Fgp, G, h, dims, A, b)

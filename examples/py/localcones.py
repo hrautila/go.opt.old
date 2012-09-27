@@ -337,7 +337,7 @@ def conelp(c, G, h, dims = None, A = None, b = None, primalstart = None,
         except ArithmeticError:  
             raise ValueError("Rank(A) < p or Rank([G; A]) < n")
         blas.scal(-1.0, s)  
-        #print "** initial s=\n", s
+        #print "** initial s=\n", helpers.str2(s, "%.5f")
     else:
         xcopy(primalstart['x'], x)
         blas.copy(primalstart['s'], s)
@@ -368,7 +368,7 @@ def conelp(c, G, h, dims = None, A = None, b = None, primalstart = None,
         except ArithmeticError:  
             raise ValueError("Rank(A) < p or Rank([G; A]) < n")
 
-        #print "initial z=\n", localmisc.strMat(z)
+        #print "initial z=\n", helpers.str2(z, "%.5f")
         #print "** initial z=\n", z 
     else:
         if 'y' in dualstart: ycopy(dualstart['y'], y)

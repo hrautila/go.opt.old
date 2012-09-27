@@ -2,7 +2,7 @@
 # This is copied from CVXOPT examples and modified to be used as test reference
 # for corresponding Go program.
 #
-
+import sys
 from cvxopt import matrix, solvers
 import helpers
 import localcones

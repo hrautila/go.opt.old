@@ -38,12 +38,12 @@ def solve(opts, chkpoints):
         print "x=\n", helpers.str2(sol['x'], "%.9f")
         print "s=\n", helpers.str2(sol['s'], "%.9f")
         print "z=\n", helpers.str2(sol['z'], "%.9f")
-        print "\n *** running GO test ***"
         rungotest(sol)
 
 def rungotest(sol):
+    print "\n *** running GO test ***"
     helpers.run_go_test("../testconelp", {'x': sol['x'], 's': sol['s'], 'z': sol['z']})
 
 
 chkpoints = False
-solve({'maxiters': 30}, chkpoints)
+solve({'maxiters': 20}, chkpoints)

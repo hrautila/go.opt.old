@@ -174,6 +174,7 @@ def qcl1(A, b):
         return None, None
 
 def rungo(A, b, x, z):
+    print "\n ** running Go test ..."
     helpers.run_go_test("../testqcl1", {'x': x, 'z': z, 'A': A, 'b': b})
 
 setseed()
