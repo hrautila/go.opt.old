@@ -11,7 +11,6 @@ import (
 )
 
 var xVal string
-var sVal string
 var spPath string
 var spVerbose bool
 var maxIter int
@@ -21,7 +20,6 @@ func init() {
 	flag.IntVar(&maxIter, "N", -1, "Max number of iterations.")
 	flag.StringVar(&spPath, "sp", "", "savepoint directory")
 	flag.StringVar(&xVal, "x", "", "Reference value for X")
-	flag.StringVar(&sVal, "s", "", "Reference value for S")
 }
 	
 func error(ref, val *matrix.FloatMatrix) (nrm float64, diff *matrix.FloatMatrix) {
@@ -30,19 +28,11 @@ func error(ref, val *matrix.FloatMatrix) (nrm float64, diff *matrix.FloatMatrix)
 	return
 }
 
-func check(x, s, z *matrix.FloatMatrix) {
+func check(x *matrix.FloatMatrix) {
 	if len(xVal) > 0 {
 		ref, _ := matrix.FloatParseSpe(xVal)
 		nrm, diff := error(ref, x)
 		fmt.Printf("x: nrm=%.9f\n", nrm)
-		if nrm > 10e-7 {
-			fmt.Printf("diff=\n%v\n", diff.ToString("%.12f"))
-		}
-	}
-	if len(sVal) > 0 {
-		ref, _ := matrix.FloatParseSpe(sVal)
-		nrm, diff := error(ref, s)
-		fmt.Printf("s: nrm=%.9f\n", nrm)
 		if nrm > 10e-7 {
 			fmt.Printf("diff=\n%v\n", diff.ToString("%.12f"))
 		}
@@ -67,9 +57,7 @@ func main() {
 	gdata := []float64{1.0, 2.0/awall, 2.0/awall, 1.0/aflr, alpha, 1.0/beta, gamma, 1.0/delta}
 	
 	g := matrix.FloatNew(8, 1, gdata).Log()
-	fmt.Printf("g=\n%v\n", g.ToString("%.3f"))
 	F := matrix.FloatMatrixFromTable(fdata)
-	fmt.Printf("F=\n%v\n", F.ToString("%.3f"))
 	K := []int{1, 2, 1, 1, 1, 1, 1}
 
 	var solopts cvx.SolverOptions
@@ -87,10 +75,13 @@ func main() {
 	sol, err := cvx.Gp(K, F, g, nil, nil, nil, nil, &solopts)
 	if sol != nil && sol.Status == cvx.Optimal {
 		x := sol.Result.At("x")[0]
-		var s *matrix.FloatMatrix = nil
-		var z *matrix.FloatMatrix = nil
+		r := matrix.Exp(x)
+		h := r.GetIndex(0)
+		w := r.GetIndex(1)
+		d := r.GetIndex(2)
 		fmt.Printf("x=\n%v\n", x.ToString("%.9f"))
-		check(x, s, z)
+        fmt.Printf("\n h = %f,  w = %f, d = %f.\n", h, w, d)   
+		check(x)
 	} else {
 		fmt.Printf("status: %v\n", err)
 	}
