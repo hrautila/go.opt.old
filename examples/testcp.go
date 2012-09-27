@@ -96,7 +96,7 @@ func acenter() *matrix.FloatMatrix {
 		[]float64{1.0, 0.0, 0.0, 0.0, 20., 10., 40., 10., 80., 10., 40., 10., 15.})
 	
 	var solopts cvx.SolverOptions
-	solopts.MaxIter = 2
+	solopts.MaxIter = 40
 	if maxIter > -1 {
 		solopts.MaxIter = maxIter
 	}

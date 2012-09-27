@@ -61,7 +61,7 @@ func main() {
 	K := []int{1, 2, 1, 1, 1, 1, 1}
 
 	var solopts cvx.SolverOptions
-	solopts.MaxIter = 2
+	solopts.MaxIter = 40
 	if maxIter > 0 {
 		solopts.MaxIter = maxIter
 	}

@@ -36,15 +36,15 @@ func check(x *matrix.FloatMatrix) {
 
 
 // FloorPlan implements interface cvx.ConvexProg.
-type FloorPlan struct {
+type floorPlan struct {
 	Amin *matrix.FloatMatrix
 }
 
-func NewFloorPlan(plan *matrix.FloatMatrix) *FloorPlan {
-	return &FloorPlan{plan}
+func newFloorPlan(plan *matrix.FloatMatrix) *floorPlan {
+	return &floorPlan{plan}
 }
 
-func (p *FloorPlan) F0() (mnl int, x0 *matrix.FloatMatrix, err error) {
+func (p *floorPlan) F0() (mnl int, x0 *matrix.FloatMatrix, err error) {
 	err = nil
 	mnl = 5
 	x0 = matrix.FloatZeros(22, 1)
@@ -53,7 +53,7 @@ func (p *FloorPlan) F0() (mnl int, x0 *matrix.FloatMatrix, err error) {
 	return 
 }
 
-func (p *FloorPlan) F1(x *matrix.FloatMatrix)(f, Df *matrix.FloatMatrix, err error) {
+func (p *floorPlan) F1(x *matrix.FloatMatrix)(f, Df *matrix.FloatMatrix, err error) {
 	err = nil
 	mn := x.Min(-1, -2, -3, -4, -5)
 	if mn <= 0.0 {
@@ -75,7 +75,7 @@ func (p *FloorPlan) F1(x *matrix.FloatMatrix)(f, Df *matrix.FloatMatrix, err err
 	return 
 }
 
-func (p *FloorPlan) F2(x, z *matrix.FloatMatrix)(f, Df, H *matrix.FloatMatrix, err error) {
+func (p *floorPlan) F2(x, z *matrix.FloatMatrix)(f, Df, H *matrix.FloatMatrix, err error) {
 	f, Df, err = p.F1(x)
 	x17 := matrix.FloatVector(x.FloatArray()[17:])
 	tmp := matrix.Div(p.Amin, matrix.Pow(x17, 3.0))
@@ -181,7 +181,7 @@ func floorplan(Amin *matrix.FloatMatrix) *matrix.FloatMatrix {
     //  w5 - gamma * h5 <= 0.0  
 	G.SetAtRowArray(25, []int{16, 21}, []float64{1.0, -gamma})
 
-	F := NewFloorPlan(Amin)
+	F := newFloorPlan(Amin)
 
 	
 	var dims *sets.DimensionSet = nil
