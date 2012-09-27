@@ -41,7 +41,7 @@ func errorToRef(ref, val *matrix.FloatMatrix) (nrm float64, diff *matrix.FloatMa
 
 func check(x, z *matrix.FloatMatrix) {
 	if len(xVal) > 0 {
-		ref, _ := matrix.FloatParseSpe(xVal)
+		ref, _ := matrix.FloatParse(xVal)
 		nrm, diff := errorToRef(ref, x)
 		fmt.Printf("x: nrm=%.9f\n", nrm)
 		if nrm > 10e-7 {
@@ -49,7 +49,7 @@ func check(x, z *matrix.FloatMatrix) {
 		}
 	}
 	if len(zVal) > 0 {
-		ref, _ := matrix.FloatParseSpe(zVal)
+		ref, _ := matrix.FloatParse(zVal)
 		nrm, diff := errorToRef(ref, z)
 		fmt.Printf("z: nrm=%.9f\n", nrm)
 		if nrm > 10e-7 {
@@ -312,7 +312,7 @@ func main() {
 		checkpnt.Format("%.17f")
 	}
 	if len(AVal) > 0 {
-		A, _ = matrix.FloatParseSpe(AVal)
+		A, _ = matrix.FloatParse(AVal)
 		if A == nil {
 			fmt.Printf("could not parse:\n%s\n", AVal)
 			return
@@ -321,7 +321,7 @@ func main() {
 		A = matrix.FloatNormal(m, n)
 	}
 	if len(bVal) > 0 {
-		b, _ = matrix.FloatParseSpe(bVal)
+		b, _ = matrix.FloatParse(bVal)
 		if b == nil {
 			fmt.Printf("could not parse:\n%s\n", bVal)
 			return

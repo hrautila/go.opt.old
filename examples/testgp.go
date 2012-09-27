@@ -30,7 +30,7 @@ func error(ref, val *matrix.FloatMatrix) (nrm float64, diff *matrix.FloatMatrix)
 
 func check(x *matrix.FloatMatrix) {
 	if len(xVal) > 0 {
-		ref, _ := matrix.FloatParseSpe(xVal)
+		ref, _ := matrix.FloatParse(xVal)
 		nrm, diff := error(ref, x)
 		fmt.Printf("x: nrm=%.9f\n", nrm)
 		if nrm > 10e-7 {

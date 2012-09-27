@@ -195,7 +195,7 @@ func main() {
 	var data *matrix.FloatMatrix = nil
 	flag.Parse()
 	if len(dataVal) > 0 {
-		data, _ = matrix.FloatParseSpe(dataVal)
+		data, _ = matrix.FloatParse(dataVal)
 		if data == nil {
 			fmt.Printf("could not parse:\n%s\n", dataVal)
 			return

@@ -42,7 +42,7 @@ func error(ref, val *matrix.FloatMatrix) (nrm float64, diff *matrix.FloatMatrix)
 
 func check(x, ss0, ss1, zs0, zs1 *matrix.FloatMatrix) {
 	if len(xVal) > 0 {
-		ref, _ := matrix.FloatParseSpe(xVal)
+		ref, _ := matrix.FloatParse(xVal)
 		nrm, diff := error(ref, x)
 		fmt.Printf("x: nrm=%.9f\n", nrm)
 		if nrm > 10e-7 {
@@ -50,7 +50,7 @@ func check(x, ss0, ss1, zs0, zs1 *matrix.FloatMatrix) {
 		}
 	}
 	if len(ss0Val) > 0 {
-		ref, _ := matrix.FloatParseSpe(ss0Val)
+		ref, _ := matrix.FloatParse(ss0Val)
 		nrm, diff := error(ref,ss0)
 		fmt.Printf("ss0: nrm=%.9f\n", nrm)
 		if nrm > 10e-7 {
@@ -58,7 +58,7 @@ func check(x, ss0, ss1, zs0, zs1 *matrix.FloatMatrix) {
 		}
 	}
 	if len(ss1Val) > 0 {
-		ref, _ := matrix.FloatParseSpe(ss1Val)
+		ref, _ := matrix.FloatParse(ss1Val)
 		nrm, diff := error(ref,ss1)
 		fmt.Printf("ss1: nrm=%.9f\n", nrm)
 		if nrm > 10e-7 {
@@ -66,7 +66,7 @@ func check(x, ss0, ss1, zs0, zs1 *matrix.FloatMatrix) {
 		}
 	}
 	if len(zs0Val) > 0 {
-		ref, _ := matrix.FloatParseSpe(zs0Val)
+		ref, _ := matrix.FloatParse(zs0Val)
 		nrm, diff := error(ref, zs0)
 		fmt.Printf("zs0: nrm=%.9f\n", nrm)
 		if nrm > 10e-7 {
@@ -74,7 +74,7 @@ func check(x, ss0, ss1, zs0, zs1 *matrix.FloatMatrix) {
 		}
 	}
 	if len(zs1Val) > 0 {
-		ref, _ := matrix.FloatParseSpe(zs1Val)
+		ref, _ := matrix.FloatParse(zs1Val)
 		nrm, diff := error(ref, zs1)
 		fmt.Printf("zs1: nrm=%.9f\n", nrm)
 		if nrm > 10e-7 {

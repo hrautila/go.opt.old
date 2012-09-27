@@ -35,7 +35,7 @@ func check(x, s, z *matrix.FloatMatrix) {
 	var xref, sref, zref *matrix.FloatMatrix = nil, nil, nil
 
 	if len(xVal) > 0 {
-		xref, _ = matrix.FloatParseSpe(xVal)
+		xref, _ = matrix.FloatParse(xVal)
 		nrm, diff := error(xref, x)
 		fmt.Printf("x: nrm=%.17f\n", nrm)
 		if nrm > 10e-7 {
@@ -44,7 +44,7 @@ func check(x, s, z *matrix.FloatMatrix) {
 	}
 	
 	if len(sVal) > 0 {
-		sref, _ = matrix.FloatParseSpe(sVal)
+		sref, _ = matrix.FloatParse(sVal)
 		nrm, diff := error(sref, s)
 		fmt.Printf("s: nrm=%.17f\n", nrm)
 		if nrm > 10e-7 {
@@ -52,7 +52,7 @@ func check(x, s, z *matrix.FloatMatrix) {
 		}
 	}
 	if len(zVal) > 0 {
-		zref, _ = matrix.FloatParseSpe(zVal)
+		zref, _ = matrix.FloatParse(zVal)
 		nrm, diff := error(zref, z)
 		fmt.Printf("z: nrm=%.17f\n", nrm)
 		if nrm > 10e-7 {

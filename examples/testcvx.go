@@ -101,31 +101,31 @@ func makeW() (W *cvx.FloatMatrixSet, err error) {
 
 
 	W = cvx.FloatSetNew("d", "di", "r", "rti", "beta", "v", "dnl", "dnli")
-	m, err = matrix.FloatParseSpe(d0_s)
+	m, err = matrix.FloatParse(d0_s)
 	if err != nil { return }
 	W.Append("d", m)
 
-	m, err = matrix.FloatParseSpe(di0_s)
+	m, err = matrix.FloatParse(di0_s)
 	if err != nil { return }
 	W.Append("di", m)
 
-	m, err = matrix.FloatParseSpe(r0_s)
+	m, err = matrix.FloatParse(r0_s)
 	if err != nil { return }
 	W.Append("r", m)
 
-	m, err = matrix.FloatParseSpe(rti0_s)
+	m, err = matrix.FloatParse(rti0_s)
 	if err != nil { return }
 	W.Append("rti", m)
 
-	m, err = matrix.FloatParseSpe(beta_s)
+	m, err = matrix.FloatParse(beta_s)
 	if err != nil { return }
 	W.Append("beta", m)
 
-	m, err = matrix.FloatParseSpe(v0_s)
+	m, err = matrix.FloatParse(v0_s)
 	if err != nil { return }
 	W.Append("v", m)
 
-	m, err = matrix.FloatParseSpe(v1_s)
+	m, err = matrix.FloatParse(v1_s)
 	if err != nil { return }
 	W.Append("v", m)
 
@@ -185,7 +185,7 @@ func TestScale() {
 		fmt.Printf("parse error: %s\n", err)
 	}
 	W.Print()
-	ws3, _ := matrix.FloatParseSpe(ws3_0s)
+	ws3, _ := matrix.FloatParse(ws3_0s)
 	fmt.Printf("ws=\n%v\n", ws3)
 	cvx.Scale(ws3, W, true, false)
 	fmt.Printf("ws=\n%s\n", ws3.ConvertToString())
@@ -200,9 +200,9 @@ func TestUpdateScaling() {
 	if err != nil {
 	}
 
-	ds, _ := matrix.FloatParseSpe(ds_s)
-	dz, _ := matrix.FloatParseSpe(dz_s)
-	lmbda,_ := matrix.FloatParseSpe(lmbda_s)
+	ds, _ := matrix.FloatParse(ds_s)
+	dz, _ := matrix.FloatParse(dz_s)
+	lmbda,_ := matrix.FloatParse(lmbda_s)
 
 	//fmt.Printf("s=\n%s\n", s.ConvertToString())
 	fmt.Printf("dz=\n%s\n", dz.ConvertToString())
@@ -215,8 +215,8 @@ func TestUpdateScaling() {
 
 func TestSinv() {
 	dims := makeDims()
-	s, _ := matrix.FloatParseSpe(s_sinv)
-	l, _ := matrix.FloatParseSpe(lmbda_sinv)
+	s, _ := matrix.FloatParse(s_sinv)
+	l, _ := matrix.FloatParse(lmbda_sinv)
 	fmt.Printf("s=\n%s\n", s.ConvertToString())
 	fmt.Printf("lambda=\n%s\n", l.ConvertToString())
 	cvx.Sinv(s, l, dims, 0)
@@ -229,8 +229,8 @@ func TestSprod() {
 	dz_s := "{19 1 [-4.84625905630317177 -2.15952376487305475 -3.11487780722148111 -2.84890172439185640 -0.06018020686749934 1.66646286524597986 -2.43677726058904387 0.15165371621854387 -0.11690553045657326 0.16435133837885341 -16.31158280932658045 0.08892936366725440 0.69040419578379308 -228.60579362198546960 -8.40682303542823028 0.15184232827552227 -150.39533087821908452 165.74065159010396542 -1.90076109934411064]}"
 
 	dims := makeDims()
-	s, _ := matrix.FloatParseSpe(ws3_s)
-	l, _ := matrix.FloatParseSpe(dz_s)
+	s, _ := matrix.FloatParse(ws3_s)
+	l, _ := matrix.FloatParse(dz_s)
 	fmt.Printf("s=\n%s\n", s.ConvertToString())
 	fmt.Printf("l=\n%s\n", l.ConvertToString())
 	cvx.Sprod(s, l, dims, 0)
@@ -252,7 +252,7 @@ func TestSymm() {
 
 func TestPack() {
 	s := "{19 1 [0.34685034769697742 0.39585039411618006 -17.26426975698158017 13.79271773799920275 -13.13205395184397339 0.84649931876339113 1.62479401776324162 0.03868823612413173 0.05311904070719403 -0.13134270109326304 10.23788144936299993 -0.21362220612188865 0.27062567408202032 -58.02205901917197650 6.16596220003297013 -0.23193020346970489 -41.37875150278244973 45.61335347561063713 0.40295716371409468]}"
-	x,_ := matrix.FloatParseSpe(s)
+	x,_ := matrix.FloatParse(s)
 	y := matrix.FloatZeros(x.NumElements(), 1)
 	dims := makeDims()
 	fmt.Printf("x=\n%v\n", x.ConvertToString())
@@ -267,10 +267,10 @@ func TestSgemv() {
 
 	res := "{3 1 [-65.19580144480464412 16.89263580404870524 17.05333779316251253]}"
 
-	G, _ := matrix.FloatParseSpe(Gs)
-	x, _ := matrix.FloatParseSpe(xs)
-	y, _ := matrix.FloatParseSpe(ys)
-	r, _ := matrix.FloatParseSpe(res)
+	G, _ := matrix.FloatParse(Gs)
+	x, _ := matrix.FloatParse(xs)
+	y, _ := matrix.FloatParse(ys)
+	r, _ := matrix.FloatParse(res)
 	dims := makeDims()
 	cvx.Sgemv(G, x, y, -1.0, 1.0, dims, linalg.OptTrans)
 	fmt.Printf("y=\n%v\n", y.ConvertToString())
@@ -292,7 +292,7 @@ func TestMaxStep() {
 	dims := makeDims()
 
 	for k, s := range mspecs {
-		m, _ := matrix.FloatParseSpe(s)
+		m, _ := matrix.FloatParse(s)
 		fmt.Printf("%d=\n%v\n", k, m.ConvertToString())
 		t, _ := cvx.MaxStep(m, dims, 0, nil)
 		fmt.Printf("== %d: t = %.17f\n", k, t)
@@ -359,11 +359,11 @@ func TestSinv2() {
 		"[-0.00e+00]"+
 		"[-6.24e+00]"
 		
-	s, _ := matrix.FloatParsePy(sS2)
-	lmbda, _ := matrix.FloatParsePy(lmbdaS2)
+	s, _ := matrix.FloatParse(sS2)
+	lmbda, _ := matrix.FloatParse(lmbdaS2)
 	cvx.Sinv(s, lmbda, dims, 0)
 	blas.ScalFloat(s, -1.0)
-	res_s, _ := matrix.FloatParsePy(sinv_res)
+	res_s, _ := matrix.FloatParse(sinv_res)
 	fmt.Printf("res=\n%v\n", s)
 	fmt.Printf("OK=%v\n", s.Equal(res_s))
 }
@@ -412,8 +412,8 @@ func TestComputeScaling() {
 		"[ 0.00e+00]"+
 		"[ 1.06e+00]"
 
-	s, _ := matrix.FloatParsePy(sS)
-	z, _ := matrix.FloatParsePy(zS)
+	s, _ := matrix.FloatParse(sS)
+	z, _ := matrix.FloatParse(zS)
 	lmbda := matrix.FloatZeros(14,1)
 	W, err := cvx.ComputeScaling(s, z, lmbda, dims, 0)
 	fmt.Printf("lmbda=\n%v\n", lmbda)
@@ -423,7 +423,7 @@ func TestComputeScaling() {
 }
 
 func TestJnrm2() {
-	s, _ := matrix.FloatParsePy(sS)
+	s, _ := matrix.FloatParse(sS)
 	aa := cvx.Jnrm2(s, 4, 2)
 	fmt.Printf("aa = %v\n", aa)
 }
